@@ -9,6 +9,7 @@ const mongoose = require('mongoose');
 const BodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const PORT = process.env.PORT || 3000;
+const url = process.env.MONGODB_URI || 'mongodb://localhost:27017/chat';
 
 const passport = require('passport');
 const { Strategy } = require('passport-jwt');
@@ -21,7 +22,7 @@ passport.use(new Strategy(jwt, function(jwt_payload, done) {
 }));
  
 
-mongoose.connect('mongodb://localhost:27017/chat', {});
+mongoose.connect(url, {});
 mongoose.Promise = require('bluebird');
 mongoose.set('debug', true);
 
@@ -41,6 +42,4 @@ app.use(cookieParser());
 require('./router')(app);
 require('./sockets')(io);
 
-server.listen(PORT, '0.0.0.0', ()=>{
-    console.log("server started on port 3000");
-});
+server.listen(PORT);
